@@ -1,0 +1,88 @@
+#include <iostream>
+using namespace std;
+
+// Node structure
+struct Node {
+    int rainfall;
+    Node* next;
+    Node* prev;
+    Node(int r) {
+        rainfall = r;
+        next = nullptr;
+        prev = nullptr;
+    }
+};
+
+
+void addNode(Node*& head, Node*& tail, int rain) {
+    Node* newNode = new Node(rain);
+    if (head == nullptr) {
+        head = newNode;
+        tail = newNode;
+    } else {
+        tail->next = newNode;
+        newNode->prev = tail;
+        tail = newNode;
+    }
+}
+
+
+void calculateAndDisplay(Node* head) {
+    int total = 0, highest = -1, lowest = 9999;
+    int day = 1, highDay = 1, lowDay = 1;
+
+    Node* temp = head;
+
+    while (temp != nullptr) {
+        cout << "Day " << day << ": " << temp->rainfall << endl;
+        total += temp->rainfall;
+
+        if (temp->rainfall > highest) {
+            highest = temp->rainfall;
+            highDay = day;
+        }
+        if (temp->rainfall < lowest) {
+            lowest = temp->rainfall;
+            lowDay = day;
+        }
+        temp = temp->next;
+        day++;
+    }
+
+    cout << "\nTotal Rainfall: " << total << endl;
+    cout << "Average Rainfall: " << total / 7.0 << endl;
+    cout << "Highest Rainfall on Day " << highDay << " (" << highest << ")" << endl;
+    cout << "Lowest Rainfall on Day " << lowDay << " (" << lowest << ")" << endl;
+
+   
+    if (head != nullptr) {
+        temp = head;
+        for (int i = 1; i < 6; i++) temp = temp->next;
+        cout << "Rainfall of day after 5th: " << temp->next->rainfall << endl;
+    }
+}
+
+
+int main() {
+    Node* head = nullptr;
+    Node* tail = nullptr;
+
+    cout << "Enter rainfall for 7 days (no negative numbers):\n";
+    for (int i = 1; i <= 7; i++) {
+        int rain;
+        do {
+            cout << "Day " << i << ": ";
+            cin >> rain;
+            if (rain < 0) {
+                cout << "Rainfall cannot be negative! Try again.\n";
+            }
+        } while (rain < 0);
+
+        addNode(head, tail, rain);
+    }
+
+    cout << "\nRainfall Data:\n";
+    calculateAndDisplay(head);
+
+    return 0;
+}
